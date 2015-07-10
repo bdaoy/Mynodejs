@@ -1,0 +1,31 @@
+body,div, a {
+	padding:0;
+	margin:0;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+		
+}
+#caculator {
+	
+	width:310px;
+	height:550px;
+	border:3px black solid;
+	margin: 10px auto;
+	padding: 5px;
+	border-radius: 10px;
+	border-color:#9370D8;
+	background-color: #e6e6e6;
+	
+	
+}
+input {
+	height: 70px;
+	width: 300px;
+	margin: auto;
+	background-color:white;
+	margin-bottom: 5px;
+	text-align: right;
+	font-size: 60px;
+	padding: 0 5 px;
+	border-radius: 5px 10px 4px 8px;
+	
+}
