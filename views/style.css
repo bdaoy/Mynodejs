@@ -1,0 +1,13 @@
+
+body {
+	background-color: blue;
+	background-position: center;
+}
+
+
+.main{
+		height: 200px;
+		width: 400px;
+		background-color: green;
+		text-align: center;
+	}

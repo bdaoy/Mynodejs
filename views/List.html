@@ -1,0 +1,143 @@
+<DOCTYPE html>
+	<head>
+		<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<style>
+		#main {
+			height: 200px;
+			width: 400px;
+			background-color: green;
+			text-align: center;
+			
+		}
+
+		</style>
+	</head>
+
+	<body>
+		<div id="main">
+			<h2>ToDO List  page</h2>
+			<form method="" action="" name="Listpage">
+				<table>
+					<tr>
+						<td><input type="text"  id="textInput"></input></td>
+						<td><button value="submit" id="insert">Insert</button></td>
+					</tr>
+				</table>
+				<table id="table" border="2">
+					<thead>
+						<th>Checkbox</th>
+			    		<th>TodoList</th>
+			    		<th>Edit</th>
+			    		<th>Delete</th>
+			    		</thead>
+						<tbody>
+
+						</tbody>
+				</table>	
+			</form>
+		</div>
+	</body>
+
+	<script>
+		$(document).ready(function() {
+			$("#insert").click(function() {
+				var Insert = $("#textInput").val();
+				
+				// $("#textInput").append(Insert);
+				console.log("This is my insert" + Insert);
+
+				$.post("http://localhost:3000/List",{text:Insert}, function(data) {
+					 location.reload();
+				});
+
+			});
+		// });
+			$.get("/data", function(data) {
+				if(data) {
+					var results = '';
+					console.log(data);
+					for(var i = 0; i < data.length; i++) {
+						if(data[i]) {
+							// var activeDelete = 'onclick="deleteData('data[i]._id')"');
+							// btnDelete = "<button id='data[i]._id, activeDelete'>Delete</button">
+							results += "<tr><td><input type=checkbox value=data[i]._status></input>"+"</td><td>" + data[i].list+"</td><td><button value=data[i]._id class=edit>Edit</button>" +"</td><td><button value=data[i]._id class=delete>Delete</button>" +"</td></tr>";
+						}
+					}
+					//Show on web page
+					console.log('results', results);
+					$('#table tbody').append(results);
+						
+				}else {
+					alert("err");
+				}
+			});
+
+			$.delete("/data", function(data) {
+				alert("thong bao thong bao thong bao");
+				console.log("");
+				if(data) {
+
+					// $("data[i]._id").click(function() {
+					// 	alert("Hello stop here, stop here I say stop here");
+					// 	("results").remove();
+
+					// });
+				}else{
+					alert("err");
+
+				}
+			});
+
+			// 	$.ajax({
+			// 		  url: '/delete/' + id,
+			// 		  type: 'DELETE',
+			// 		  data: id,
+			// 		  dataType: "object",
+			// 		  success: function (data, textStatus, jqXHR) {
+					    
+			// 		  },
+			// 		  error: function (jqXHR, textStatus, errorThrown) {
+					    
+			// 		  }
+			// 		});
+
+			// });
+
+
+	});
+	
+
+
+// /*Display to web page*/
+// 			var renderData = function () {
+// 				var contentHtml = "";
+// 				for( var i = 0, len = data.length; i < len; i ++) {
+// 					var fullName = data[i].firstName.concat(" ", data[i].lastName),
+// 						activeDelete = 'onclick="deleteData('.concat(data[i].id, ')"'); 
+// 						btnDelete = "<button id='".concat(data[i].id, "'", activeDelete, ">DELETE</button></li>");
+// 					contentHtml = contentHtml.concat('<li>',fullName, btnDelete, '</li>');
+// 				}					
+// 				document.getElementById("list-users").innerHTML = contentHtml;
+// 			}
+
+// 			/*Show values*/
+// 			renderData();
+
+// 			/*Delete an item*/
+// 			var deleteData = function(idDelete) {
+// 				for (var i = 0, len = data.length; i < len; i ++) {		
+// 					if (data[i].id == idDelete) {
+// 						data.splice(i, 1);
+// 						break;
+// 					};
+// 				};
+// 				renderData();
+// 			}
+
+
+
+
+	</script>
+</html>
