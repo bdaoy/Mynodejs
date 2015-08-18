@@ -1,21 +1,58 @@
 <DOCTYPE html>
 	<head>
 		<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<!-- 	<link rel="stylesheet" type="text/css" href="style.css"> -->
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<style>
+		body{
+			background-color: SlateGray;
+		}
 		#main {
-			height: 200px;
+			height: 800px;
 			width: 400px;
 			background-color: green;
 			text-align: center;
-			
+			padding-left: 100px;
+			margin-left: 300px;
+			margin-top:100px;
+			border-radius: 5%;
 		}
 
 		</style>
 	</head>
 
 	<body>
+
+		 <div class="example">
+        <div class="container">
+            <div class="row">
+                <h2>Horizontal Form</h2>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Email</label>
+                        <div class="col-xs-10">
+                            <input type="email" class="form-control" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Mật Khẩu</label>
+                        <div class="col-xs-10">
+                            <input type="password" class="form-control" placeholder="Password">
+                        </div>  
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-offset-2 col-xs-10">   
+                            <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+                        </div>
+                    </div>   
+                </form>
+            </div>
+        </div>
+    </div>
 		<div id="main">
 			<h2>ToDO List  page</h2>
 			<form method="" action="" name="Listpage">
@@ -31,12 +68,13 @@
 			    		<th>TodoList</th>
 			    		<th>Edit</th>
 			    		<th>Delete</th>
-			    		</thead>
-						<tbody>
+			    	</thead>
+					<tbody>
 
-						</tbody>
+					</tbody>
 				</table>	
 			</form>
+		
 		</div>
 	</body>
 
@@ -57,87 +95,84 @@
 			$.get("/data", function(data) {
 				if(data) {
 					var results = '';
-					console.log(data);
+					//console.log(data);
 					for(var i = 0; i < data.length; i++) {
 						if(data[i]) {
-							// var activeDelete = 'onclick="deleteData('data[i]._id')"');
-							// btnDelete = "<button id='data[i]._id, activeDelete'>Delete</button">
-							results += "<tr><td><input type=checkbox value=data[i]._status></input>"+"</td><td>" + data[i].list+"</td><td><button value=data[i]._id class=edit>Edit</button>" +"</td><td><button value=data[i]._id class=delete>Delete</button>" +"</td></tr>";
+							
+							results += "<tr><td><input type=checkbox value=data[i]._status></input>"+"</td><td>" + data[i].list+"</td><td><button id= '" + data[i]._id + "'class=edit>Edit</button>" +"</td><td><button id='" + data[i]._id + "' class='delete'>Delete</button>" +"</td></tr>";
 						}
 					}
 					//Show on web page
-					console.log('results', results);
-					$('#table tbody').append(results);
+					//console.log('results', results);
+					//Show on web page
+				    console.log('results', results);
+				    $('#table tbody').append(results);
+				    $('#table button.delete').click(function(event) {
+				     event.preventDefault();
+				     console.log($(this).attr('id'));
+				     var id =$(this).attr('id');
+				     $.ajax({
+							url: "/delete/" + id,
+							type: 'delete',
+							data: id,
+							dataType: "json",
+							success: function (data, textStatus, jqXHR) {
+								$(this).remove();
+
+				
+				     		location.reload();
+								
+							//alert("Data deleted");
+								    
+							},
+							error: function (jqXHR, textStatus, errorThrown) {
+
+								    
+							}
+								});
+
+							});
+				    $("#table button.edit").click(function() {
+				    	event.preventDefault();
+				    	console.log($(this).attr('id'));
+				    	var id =$(this).attr('id');
+				    	alert("Are you really want edit");
+				    	$(this).append(data);
+				    	//var form = '<input type="text"  id="textInput"></input>  <button value="submit" id="insert">save</button>'
+
+				    	//$("#table tbody").append(form);
+				    	//$("#hi").append($("<div>").load("load.php #posts"));
+				    	$.ajax({
+							url: '/edit',
+							type: 'put',
+							data: id,
+							dataType: "json",
+							success: function (data, textStatus, jqXHR) {
+								alert(data);
+								location.reload();
+								
+							},
+							error: function (jqXHR, textStatus, errorThrown) {
+    
+							}
+							});
+					});
+				    	
+
+				   
 						
 				}else {
 					alert("err");
 				}
 			});
 
-			$.delete("/data", function(data) {
-				alert("thong bao thong bao thong bao");
-				console.log("");
-				if(data) {
 
-					// $("data[i]._id").click(function() {
-					// 	alert("Hello stop here, stop here I say stop here");
-					// 	("results").remove();
 
-					// });
-				}else{
-					alert("err");
-
-				}
-			});
-
-			// 	$.ajax({
-			// 		  url: '/delete/' + id,
-			// 		  type: 'DELETE',
-			// 		  data: id,
-			// 		  dataType: "object",
-			// 		  success: function (data, textStatus, jqXHR) {
-					    
-			// 		  },
-			// 		  error: function (jqXHR, textStatus, errorThrown) {
-					    
-			// 		  }
-			// 		});
-
-			// });
-
+			 
+		
+				
 
 	});
-	
-
-
-// /*Display to web page*/
-// 			var renderData = function () {
-// 				var contentHtml = "";
-// 				for( var i = 0, len = data.length; i < len; i ++) {
-// 					var fullName = data[i].firstName.concat(" ", data[i].lastName),
-// 						activeDelete = 'onclick="deleteData('.concat(data[i].id, ')"'); 
-// 						btnDelete = "<button id='".concat(data[i].id, "'", activeDelete, ">DELETE</button></li>");
-// 					contentHtml = contentHtml.concat('<li>',fullName, btnDelete, '</li>');
-// 				}					
-// 				document.getElementById("list-users").innerHTML = contentHtml;
-// 			}
-
-// 			/*Show values*/
-// 			renderData();
-
-// 			/*Delete an item*/
-// 			var deleteData = function(idDelete) {
-// 				for (var i = 0, len = data.length; i < len; i ++) {		
-// 					if (data[i].id == idDelete) {
-// 						data.splice(i, 1);
-// 						break;
-// 					};
-// 				};
-// 				renderData();
-// 			}
-
-
-
 
 	</script>
 </html>

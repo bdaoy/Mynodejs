@@ -6,11 +6,14 @@ var MongoClient = mongodb.MongoClient;
 // Connection URL.This is where your mongodb server is running
 var url = 'mongodb://localhost:27017/User';
 
-
+// De goi module express
 var express = require("express");
+
 var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.urlencoded({extend: false}))
+
+var ObjectID = require('mongodb').ObjectID;
 
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
@@ -27,7 +30,7 @@ MongoClient.connect(url, function(err, db) {
 	console.log('connection establish to', url);
 	//Get the documents collection
 	var collection = db.collection('user');
-	var List = db.collection('List');
+	var ListDo = db.collection('List');
 
 
 	app.get('/Login', function(req, res) {
@@ -39,6 +42,10 @@ MongoClient.connect(url, function(err, db) {
 	app.get('/List', function(req, res) {
 		res.render("List.html");
 	});
+	app.get('/Form', function(req, res) {
+		res.render("loginform.html");
+	});
+
 
 	app.post('/Register', function(req, res) {
 		var user ={};
@@ -79,7 +86,7 @@ MongoClient.connect(url, function(err, db) {
 		Li.list= req.body.text;
 		Li.status = req.body.status;
 		console.log("Your lis is :"+List.list);
-		List.insert(Li, function(err, result) {
+		ListDo .insert(Li, function(err, result) {
 			if(err) {
 				console.log(err);
 			} else {
@@ -87,14 +94,10 @@ MongoClient.connect(url, function(err, db) {
 			}
 		});
 		res.send(200);
-		
-
 	});
 
-
-
 	app.get('/data', function(req, res) {
-		List.find({}, function(err, data) {
+		ListDo .find({}, function(err, data) {
 			if(err) {
 				console.log(err);
 				res.send('401');
@@ -118,29 +121,49 @@ MongoClient.connect(url, function(err, db) {
 
 	});
 
-	// app.put('/data:/id', function(req, res) {
-	// 	List.update({_id: req.params.id},{$set:{list:''}}), function(err, data) {
-	// 		if(err) {
-	// 			console.log(err);
-	// 			res.send('401');
-	// 		}else {
-	// 			console.log("You updated");
-	// 			res.send('200');
-	// 		}
-
-	// 	});
-
-	// });
 
 
-	app.delete('/data/:id', function(req, res) {
-		List.remove({_id: req.params.id}, function(err, data) {
+
+
+
+	
+var ObjectID = require('mongodb').ObjectID
+var _id = new ObjectID(_id);
+app.put('/edit', function (req, res) {
+	ListDo.find({"_id": new ObjectID(req.body.id)}, function(err, data) {  
+    if(err ) {
+      console.log(err);
+      res.send('401');
+    } else {
+    	data.each(function(err, doc) {
+				if(err) {
+					console.log(err);
+					res.send('401');
+				}else {
+    			 ListDo.update({_id: new ObjectID(req.body.id) }, {$set: {list: req.body.list}}, {w:1}, function(err, list) {
+			        if(err) res.send('400');
+			        console.log('entry updated');
+			        res.charset = 'utf-8' 
+			        res.send(200);
+			    });
+				}
+			});
+    }
+  });
+
+	});
+
+
+	
+	app.delete('/delete/:id', function(req, res) {
+		console.log("id remove ", req.params.id)
+		ListDo.remove({"_id": new ObjectID(req.params.id)}, function(err, data) {
 			if(err) {
 				console.log(err);
 				res.send('401');
 			}else {
-				console.log("Your data removed");
-				res.send('200');
+				console.log("Your data removed", data );
+				res.send(200);
 			}
 
 		});
@@ -148,21 +171,9 @@ MongoClient.connect(url, function(err, db) {
 
 
 });
+
 app.listen(3000, function() {
-			console.log("Started on PORT 3000");
-		});
+	console.log("Started on PORT 3000");
+});
 
 
-// app.delete('/user/:id', function (req, res) {
-//     collection.remove({_id: req.params.id }, function(err, data) {
-//       if(err) {
-//         console.log(err);
-//         res.send('401');
-//       }else {
-//         console.log("Your data removed");
-//         // collection.remove();
-//         res.send('200');
-//       }
-
-//     });
-//   }); 
